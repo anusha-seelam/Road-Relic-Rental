@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Road Relic Rental</title> 
+  <link rel="stylesheet" href="styles.css"> 
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script> 
+  <style> 
+    body {
+      background-color: #e0e6ed;
+      font-family: Arial, sans-serif;
+    }
+    .header {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      padding: 10px;
+      background-color: #333;
+      color: white;
+    }
+    .slogan {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 10px;
+      color: white;
+    }
+    .gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+    .car-item {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+      background: white;
+      position: relative;
+      flex-wrap: wrap;
+    }
+    .car-item img {
+      width: 300px;
+      height: 200px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .car-details {
+      padding-left: 20px;
+      flex-grow: 1;
+    }
+    .booking-form {
+      display: none;
+      margin-top: 15px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: #f9f9f9;
+      width: 100%;
+    }
+    .map-container {
+      width: 100%;
+      height: 200px;
+      margin-top: 10px;
+    }
+    .book-now-btn, .home-btn {
+      padding: 8px 12px;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-top: 10px;
+      background: #28a745;
+      color: white;
+    }
+    .book-now-btn:hover, .home-btn:hover {
+      background: #218838;
+    }
+    .cancel-btn {
+      background: #dc3545;
+    }
+    .cancel-btn:hover {
+      background: #c82333;
+    }
+  </style> 
+
+  <script>
+    function showBookingForm(id) {
+      let bookingForm = document.getElementById(id);
+      bookingForm.style.display = bookingForm.style.display === "none" ? "block" : "none";
+      if (bookingForm.style.display === "block") {
+        initMap(id + "-map");
+      }
+    }
+
+    function initMap(mapId) {
+      if (!navigator.geolocation) {
+        alert("Geolocation is not supported by your browser");
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(position => {
+        let map = new google.maps.Map(document.getElementById(mapId), {
+          center: { lat: position.coords.latitude, lng: position.coords.longitude },
+          zoom: 15
+        });
+        new google.maps.Marker({
+          position: { lat: position.coords.latitude, lng: position.coords.longitude },
+          map: map,
+          title: "Car Location"
+        });
+      }, () => {
+        alert("Unable to retrieve location");
+      });
+    }
+  </script>
+</head> 
+
+<body> 
+  <div class="header">Road Relic Rental</div> 
+  <h1 class="slogan">The Rhythm of Motion, The Pulse of Adventure.</h1> 
+  <h2 class="title" style="text-align:center;">Available Cars</h2>
+  <div class="gallery"> 
+    <script>
+      const cars = [
+        { name: "Swift", engine: "1.2L Petrol", transmission: "Manual", rent: "₹2,075/day, ₹12,450/week, ₹45,650/month", image: "s1.jpeg" },
+        { name: "Sedan", engine: "1.5L Diesel", transmission: "Automatic", rent: "₹3,320/day, ₹20,750/week, ₹74,700/month", image: "s2.jpeg" },
+        { name: "SUV", engine: "2.0L Turbo", transmission: "Automatic", rent: "₹4,150/day, ₹26,560/week, ₹99,600/month", image: "s3.jpeg" },
+        { name: "Hatchback", engine: "1.0L Petrol", transmission: "Manual", rent: "₹1,850/day, ₹10,850/week, ₹39,500/month", image: "s4.jpeg" },
+        { name: "Crossover", engine: "1.8L Hybrid", transmission: "Automatic", rent: "₹4,500/day, ₹28,000/week, ₹105,000/month", image: "s5.jpeg" },
+        { name: "Convertible", engine: "3.0L Petrol", transmission: "Automatic", rent: "₹6,800/day, ₹40,500/week, ₹152,000/month", image: "s6.jpeg" },
+        { name: "Coupe", engine: "2.5L Petrol", transmission: "Automatic", rent: "₹5,750/day, ₹34,000/week, ₹127,000/month", image: "s7.jpeg" },
+        { name: "Luxury Sedan", engine: "3.5L Petrol", transmission: "Automatic", rent: "₹8,200/day, ₹48,500/week, ₹182,000/month", image: "s8.jpeg" },
+        { name: "Pickup Truck", engine: "2.8L Diesel", transmission: "Manual", rent: "₹3,900/day, ₹24,000/week, ₹90,000/month", image: "s9.jpeg" },
+        { name: "Electric Car", engine: "Battery EV", transmission: "Automatic", rent: "₹3,500/day, ₹22,000/week, ₹82,000/month", image: "s10.jpeg" }
+      ];
+
+      for (let i = 1; i <= 10; i++) {
+        let car = cars[i - 1];
+        document.write(`
+        <div class="car-item"> 
+          <img src="s${i}.jpeg" alt="${car.name}"> 
+          <div class="car-details"> 
+            <h3>${car.name}</h3> 
+            <p><strong>Engine:</strong> ${car.engine}</p> 
+            <p><strong>Transmission:</strong> ${car.transmission}</p> 
+            <p class="rent-info"><strong>Rent:</strong> ${car.rent}</p> 
+            <button class="book-now-btn" onclick="showBookingForm('car${i}')">Book Now</button> 
+            <div id="car${i}" class="booking-form"> 
+              <h4>Booking Details</h4> 
+              <form> 
+                <label>Select Rental Period:</label> 
+                <select> 
+                  <option>1 Day</option> 
+                  <option>3 Days</option> 
+                  <option>1 Week</option> 
+                  <option>1 Month</option> 
+                </select> 
+                <h4>User Details</h4> 
+                <label for="full-name">Full Name:</label> 
+                <input type="text" id="full-name" required><br> 
+                <label for="email">Email Address:</label> 
+                <input type="email" id="email" required><br> 
+                <label for="phone">Phone Number:</label> 
+                <input type="tel" id="phone" required><br> 
+                <label for="address">Address:</label> 
+                <textarea id="address" rows="3" required></textarea><br> 
+                <h4>Payment Options</h4> 
+                <input type="radio" id="credit-card" name="payment"> <label for="credit-card">Credit Card</label><br> 
+                <input type="radio" id="debit-card" name="payment"> <label for="debit-card">Debit Card</label><br> 
+                <input type="radio" id="upi" name="payment"> <label for="upi">UPI</label><br> 
+                <input type="radio" id="net-banking" name="payment"> <label for="net-banking">Net Banking</label><br> 
+                <h4>Fingerprint Verification</h4> 
+                <button type="button">Scan Fingerprint</button> 
+                <p>Fingerprint not verified</p> 
+                <h4>Car Location</h4> 
+                <div id="car${i}-map" class="map-container"></div> 
+                <button class="confirm-btn">Confirm Booking</button> 
+                <button type="button" class="cancel-btn" onclick="showBookingForm('car${i}')">Cancel</button> 
+              </form> 
+            </div> 
+            <div class="feedback-section"> 
+              <h4>Rate & Review this Car</h4> 
+              <div class="star-rating"> 
+                <span class="star" onclick="setRating(this, 'car${i}')">★</span>
+                <span class="star" onclick="setRating(this, 'car${i}')">★</span>
+                <span class="star" onclick="setRating(this, 'car${i}')">★</span>
+                <span class="star" onclick="setRating(this, 'car${i}')">★</span>
+                <span class="star" onclick="setRating(this, 'car${i}')">★</span>
+              </div> 
+              <textarea id="review-car${i}" rows="3" placeholder="Write your review here..."></textarea><br> 
+              <button class="submit-feedback" onclick="submitFeedback('car${i}')">Submit</button> 
+              <div id="reviews-car${i}" class="reviews"></div> 
+            </div> 
+          </div> 
+        </div>
+        `);
+      }
+    </script>
+  </div>
+
+  <button class="home-btn" onclick="window.location.href='Home.html'">Back to Home</button><br><br> 
+  <div class="footer">&copy; 2025 Road Relic Rental. All Rights Reserved.</div>
+</body> 
+</html>

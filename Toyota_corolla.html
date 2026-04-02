@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toyota Corolla - Road Relic Rental</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+    <style>
+        body {
+            background-color: #e0e6ed;
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+        }
+        .slogan {
+            text-align: center;
+            font-size: 20px;
+            margin-top: 10px;
+            color: white;
+        }
+        .gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+        .car-item {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            background: white;
+            position: relative;
+            flex-wrap: wrap;
+        }
+        .car-item img {
+            width: 300px;
+            height: 200px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .car-details {
+            padding-left: 20px;
+            flex-grow: 1;
+        }
+        .booking-form {
+            display: none;
+            margin-top: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: #f9f9f9;
+            width: 100%;
+        }
+        .map-container {
+            width: 100%;
+            height: 200px;
+            margin-top: 10px;
+        }
+        .book-now-btn, .home-btn {
+            padding: 8px 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-top: 10px;
+            background: #28a745;
+            color: white;
+        }
+        .book-now-btn:hover, .home-btn:hover {
+            background: #218838;
+        }
+        .cancel-btn {
+            background: #dc3545;
+            padding: 8px 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+            color: white;
+        }
+        .cancel-btn:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Toyota Corolla - Road Relic Rental</div>
+    <h1 class="slogan">Smooth Rides, Unforgettable Journeys!</h1>
+    <h2 class="title" style="text-align:center;">Available Toyota Corolla Models</h2>
+
+    <div class="gallery" id="carGallery"></div>
+
+    <button class="home-btn" onclick="window.location.href='index.html'">Back to Home</button>
+
+    <div class="footer">&copy; 2025 Road Relic Rental. All Rights Reserved.</div>
+
+    <script>
+        const corollaCars = [
+            { name: "Toyota Corolla Altis", engine: "1.8L Petrol", transmission: "Automatic", rent: "₹3,000/day, ₹18,000/week, ₹72,000/month", image: "t1.jpeg" },
+            { name: "Toyota Corolla Hybrid", engine: "1.8L Hybrid", transmission: "Automatic", rent: "₹3,500/day, ₹21,000/week, ₹84,000/month", image: "t2.jpeg" },
+            { name: "Toyota Corolla Hatchback", engine: "2.0L Petrol", transmission: "Automatic", rent: "₹4,200/day, ₹25,200/week, ₹98,000/month", image: "t3.jpeg" },
+            { name: "Toyota Corolla Cross", engine: "1.8L Hybrid", transmission: "Automatic", rent: "₹4,800/day, ₹28,800/week, ₹1,10,000/month", image: "t4.jpeg" },
+            { name: "Toyota Corolla Touring Sports", engine: "2.0L Petrol", transmission: "Automatic", rent: "₹5,200/day, ₹31,200/week, ₹1,20,000/month", image: "t5.jpeg" }
+        ];
+
+        function showBookingForm(id) {
+            let bookingForm = document.getElementById(id);
+            bookingForm.style.display = bookingForm.style.display === "none" ? "block" : "none";
+            if (bookingForm.style.display === "block") {
+                initMap(id + "-map");
+            }
+        }
+
+        function initMap(mapId) {
+            if (!navigator.geolocation) {
+                alert("Geolocation is not supported by your browser");
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(position => {
+                let map = new google.maps.Map(document.getElementById(mapId), {
+                    center: { lat: position.coords.latitude, lng: position.coords.longitude },
+                    zoom: 15
+                });
+
+                new google.maps.Marker({
+                    position: { lat: position.coords.latitude, lng: position.coords.longitude },
+                    map: map,
+                    title: "Car Location"
+                });
+            }, () => {
+                alert("Unable to retrieve location");
+            });
+        }
+
+        // Dynamically inserting cars
+        const gallery = document.getElementById("carGallery");
+        corollaCars.forEach((car, i) => {
+            const carItem = document.createElement("div");
+            carItem.classList.add("car-item");
+            carItem.innerHTML = `
+                <img src="${car.image}" alt="${car.name}">
+                <div class="car-details">
+                    <h3>${car.name}</h3>
+                    <p><strong>Engine:</strong> ${car.engine}</p>
+                    <p><strong>Transmission:</strong> ${car.transmission}</p>
+                    <p class="rent-info"><strong>Rent:</strong> ${car.rent}</p>
+                    <button class="book-now-btn" onclick="showBookingForm('car${i + 1}')">Book Now</button>
+                    <div id="car${i + 1}" class="booking-form">
+                        <h4>Booking Details</h4>
+                        <form>
+                            <label>Select Rental Period:</label>
+                            <select>
+                                <option>1 Day</option>
+                                <option>3 Days</option>
+                                <option>1 Week</option>
+                                <option>1 Month</option>
+                            </select>
+
+                            <h4>User Details</h4>
+                            <label>Full Name:</label>
+                            <input type="text" required><br>
+
+                            <label>Email Address:</label>
+                            <input type="email" required><br>
+
+                            <label>Phone Number:</label>
+                            <input type="tel" required><br>
+
+                            <label>Address:</label>
+                            <textarea rows="3" required></textarea><br>
+
+                            <h4>Payment Options</h4>
+                            <input type="radio" name="payment"> Credit Card<br>
+                            <input type="radio" name="payment"> Debit Card<br>
+                            <input type="radio" name="payment"> UPI<br>
+                            <input type="radio" name="payment"> Net Banking<br>
+
+                            <h4>Car Location</h4>
+                            <div id="car${i + 1}-map" class="map-container"></div>
+
+                            <button type="button" class="confirm-btn">Confirm Booking</button>
+                            <button type="button" class="cancel-btn" onclick="showBookingForm('car${i + 1}')">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+            gallery.appendChild(carItem);
+        });
+    </script>
+</body>
+</html>

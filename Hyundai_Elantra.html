@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyundai Elantra - Road Relic Rental</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #e0f0f5;
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 10px;
+            background-color: #002f34;
+            color: white;
+        }
+        .gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+        .car-item {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            background: white;
+            flex-wrap: wrap;
+            position: relative;
+        }
+        .car-item img {
+            width: 300px;
+            height: 200px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .car-details {
+            padding-left: 20px;
+            flex-grow: 1;
+        }
+        .book-now-btn, .confirm-btn, .cancel-btn, .back-btn {
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            color: white;
+        }
+        .book-now-btn { background: green; }
+        .book-now-btn:hover { background: green; }
+        .confirm-btn { background: #28a745; }
+        .cancel-btn { background: red; }
+        .back-btn { background:green; display: block; margin: 20px auto; text-align: center; }
+        .booking-form {
+            display: none;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+        }
+        .map-container {
+            width: 100%;
+            height: 200px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Hyundai Elantra - Road Relic Rental</div>
+    <h2 style="text-align:center;">Smooth, Sleek & Stylish – Drive the Elantra Today!</h2>
+
+    <div class="gallery">
+        <script>
+            const elantras = [
+                { name: "Hyundai Elantra SX", engine: "2.0L Petrol", transmission: "Manual", rent: "₹2,500/day", seats: 5, image: "hy1.jpeg" },
+                { name: "Hyundai Elantra SX(O)", engine: "2.0L Petrol", transmission: "Automatic", rent: "₹3,000/day", seats: 5, image: "hy2.jpeg" },
+                { name: "Hyundai Elantra CRDi", engine: "1.6L Diesel", transmission: "Manual", rent: "₹3,200/day", seats: 5, image: "hy3.jpeg" },
+                { name: "Hyundai Elantra CRDi AT", engine: "1.6L Diesel", transmission: "Automatic", rent: "₹3,800/day", seats: 5, image: "hy4.jpeg" }
+            ];
+
+            for (let i = 0; i < elantras.length; i++) {
+                let car = elantras[i];
+                document.write(`
+                    <div class="car-item">
+                        <img src="${car.image}" alt="${car.name}">
+                        <div class="car-details">
+                            <h3>${car.name}</h3>
+                            <p><strong>Engine:</strong> ${car.engine}</p>
+                            <p><strong>Transmission:</strong> ${car.transmission}</p>
+                            <p><strong>Rent:</strong> ${car.rent}</p>
+                            <p><strong>Seating:</strong> ${car.seats} Seater</p>
+                            <button class="book-now-btn" onclick="showBookingForm('car${i}')">Book Now</button>
+                            <div id="car${i}" class="booking-form">
+                                <h4>Booking Details</h4>
+                                <form>
+                                    <label>Full Name:</label>
+                                    <input type="text" required><br>
+                                    <label>Email:</label>
+                                    <input type="email" required><br>
+                                    <label>Phone:</label>
+                                    <input type="tel" required><br>
+                                    <label>Select Rental Period:</label>
+                                    <select>
+                                        <option>1 Day</option>
+                                        <option>3 Days</option>
+                                        <option>1 Week</option>
+                                        <option>1 Month</option>
+                                    </select><br>
+                                    <h4>Payment Options</h4>
+                                    <input type="radio" name="payment${i}" value="Credit Card"> Credit Card
+                                    <input type="radio" name="payment${i}" value="Debit Card"> Debit Card
+                                    <input type="radio" name="payment${i}" value="UPI"> UPI
+                                    <input type="radio" name="payment${i}" value="Net Banking"> Net Banking
+
+                                    <h4>Fingerprint Verification</h4>
+                                    <button type="button" onclick="captureFingerprint(${i})">Scan Fingerprint</button>
+                                    <p id="fingerprint-status${i}">Fingerprint not verified</p>
+
+                                    <h4>Car Location</h4>
+                                    <div id="car${i}-map" class="map-container"></div>
+
+                                    <button class="confirm-btn">Confirm Booking</button>
+                                    <button class="cancel-btn" type="button" onclick="showBookingForm('car${i}')">Cancel</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            }
+
+            function showBookingForm(id) {
+                let forms = document.querySelectorAll('.booking-form');
+                forms.forEach(form => form.style.display = "none");
+                document.getElementById(id).style.display = "block";
+            }
+
+            function captureFingerprint(id) {
+                document.getElementById(`fingerprint-status${id}`).innerText = "Fingerprint scanned successfully!";
+            }
+        </script>
+    </div>
+
+    <button class="back-btn" onclick="window.location.href='index.html'">Back to Home</button>
+    <div class="footer" style="text-align:center;">&copy; 2025 Road Relic Rental. All Rights Reserved.</div>
+</body>
+</html>
